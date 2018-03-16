@@ -10,10 +10,13 @@ class App extends Component {
     super()
     this.state = {
       token: '',
-      user: {}
+      user: null,
+      googleUser: null
     }
     this.liftTokenToState = this.liftTokenToState.bind(this)
     this.logout = this.logout.bind(this)
+    this.checkForLocalToken = this.checkForLocalToken.bind(this)
+    this.checkForGoogleUser = this.checkForGoogleUser.bind(this)
   }
 
   liftTokenToState(data) {
@@ -27,10 +30,11 @@ class App extends Component {
   logout() {
     console.log("Logging out")
     localStorage.removeItem('mernToken')
-    this.setState({token: '', user: {}})
+    this.setState({token: '', user: null, googleUser: null})
+    axios.get('/auth/logout', result => console.log(result))
   }
 
-  componentDidMount() {
+  checkForLocalToken() {
     var token = localStorage.getItem('mernToken')
     if (token === 'undefined' || token === null || token === '' || token === undefined) {
       localStorage.removeItem('mernToken')
@@ -51,9 +55,37 @@ class App extends Component {
     }
   }
 
+  checkForGoogleUser() {
+    axios.get('/auth/user').then(response => {
+      if (response.data.user) {
+        //we found a google user in the session
+        let googleUser = {
+          googleId: response.data.user.googleId,
+          displayName: response.data.user.displayName
+        }
+        this.setState({
+          googleUser
+        })
+      } else {
+        // we did not find a google user!
+        this.setState({
+          googleUser: null
+        })
+      }
+    })
+  }
+
+  componentDidMount() {
+    this.checkForGoogleUser()
+    this.checkForLocalToken()
+  }
+
+  // if a user exists as a token or as a googler user, do this 'if'
+  // or, if no logged in user exists send them to the signup/Login
+  // can only accept user token OR user google NOT both
   render() {
-    let theUser = this.state.user
-    if (typeof theUser === 'object' && Object.keys(theUser).length > 0) {
+    let theUser = this.state.user || this.state.googleUser
+    if (theUser) {
       return (
         <div>
           <UserProfile user={theUser} logout={this.logout} />

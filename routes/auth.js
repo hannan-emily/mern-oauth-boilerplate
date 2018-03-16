@@ -99,6 +99,8 @@ router.get('/google/callback',
 );
 
 // this gets the user, if it exists, and sends it to the front with res.json
+// this is accessing the passport user within the sessione IN THE BACKEND
+// pulling from server.js
 // right now the user only has the name, displayName, etc..from google profile
 router.get('/user', function(req, res, next) {
   if (req.user) {
