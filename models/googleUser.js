@@ -5,7 +5,7 @@ var googleUserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  displayName {
+  displayName: {
     type: String
   }
 });

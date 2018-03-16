@@ -4,6 +4,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var User = require('../models/user');
 var bcrypt = require('bcrypt');
+var passport = require('../config/passportConfig');
 
 var expressJWT = require('express-jwt');
 var jwt = require('jsonwebtoken');

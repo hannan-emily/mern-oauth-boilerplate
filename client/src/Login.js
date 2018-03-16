@@ -38,7 +38,7 @@ class Login extends Component {
         Email: <input type='text' value={this.state.email} onChange={this.handleEmailChange} /><br />
         Password: <input type='password' value={this.state.password} onChange={this.handlePasswordChange} /><br />
         <input type='submit' value='Log In!' />
-        <a href="/auth/google">Sign In with Google!</a>
+        <a href="/auth/google">Sign In wcith Google!</a>
       </form>
     )
   }
