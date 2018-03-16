@@ -86,4 +86,32 @@ router.post('/me/from/token', (req, res, next) => {
   }
 })
 
+router.get('/google',
+  passport.authenticate('google', {
+    scope: ['https://www.googleapis.com/auth/plus.login']
+  }));
+
+router.get('/google/callback',
+  passport.authenticate('google', { failureRedirect: '/' }),
+  function(req,res){
+    res.redirect('/');
+  }
+);
+
+// this gets the user, if it exists, and sends it to the front with res.json
+// right now the user only has the name, displayName, etc..from google profile
+router.get('/user', function(req, res, next) {
+  if (req.user) {
+    return res.json({ user: req.user });
+  } else {
+    return res.json({ user: null });
+  }
+});
+
+// this allows us to kill the session when the user logs out
+router.get('/logout', function(req, res) {
+  req.logout();
+  res.redirect('/');
+})
+
 module.exports = router;

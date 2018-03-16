@@ -20,6 +20,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'client', 'build')));
 
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true
+}))
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Do we still need this?
 app.use(function(req, res, next) {
   // before every route, attach the flash messages and current user to res.locals
